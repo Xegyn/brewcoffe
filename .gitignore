@@ -1,5 +1,4 @@
 # Created by .gitignore support plugin (hsz.mobi)
-.bowerrc
 .idea
 node_modules
 app/bower_components
