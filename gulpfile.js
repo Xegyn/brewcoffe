@@ -60,6 +60,6 @@ gulp.task('watch', function () {
     gulp.watch('./app/scripts/**/*.ts', ['ts']);
 });
 
-gulp.task('default', ['connect', 'build', 'watch'], function () {
+gulp.task('default', ['build', 'connect', 'watch'], function () {
 
 });
