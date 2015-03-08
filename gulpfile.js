@@ -1,20 +1,27 @@
 // gulp
 var gulp = require('gulp');
+
+// plugins
+var connect = require('gulp-connect');
 var slim = require('gulp-slim');
 var sass = require('gulp-sass');
 var ts = require('gulp-typescript');
 var watch = require('gulp-watch');
-var batch = require('gulp-batch');
+var browserify = require('browserify');
+var source = require('vinyl-source-stream');
+var clean = require('gulp-clean');
 
-// plugins
-var connect = require('gulp-connect');
-
-
-gulp.task('connect', ['slim', 'sass', 'ts'], function () {
+// tasks
+gulp.task('connect', function () {
     connect.server({
         root: 'build/',
         port: 8888
     });
+});
+
+gulp.task('clean', function() {
+    gulp.src('./build/*')
+        .pipe(clean({force: true}));
 });
 
 gulp.task('slim', function () {
@@ -30,9 +37,21 @@ gulp.task('sass', function () {
 });
 
 gulp.task('ts', function () {
-    gulp.src('./app/scripts/**/*.ts')
-        .pipe(ts())
-        .pipe(gulp.dest('build/js'));
+    return browserify()
+        .add('./app/scripts/main.ts')
+        .plugin('tsify')
+        .bundle()
+        .pipe(source('bundle.js'))
+        .pipe(gulp.dest('build/js/'));
+});
+
+gulp.task('vendors', function () {
+    gulp.src('./app/bower_components/angular/angular*.js')
+        .pipe(gulp.dest('build/vendors/angular'));
+});
+
+gulp.task('build', ['vendors', 'slim', 'sass', 'ts'], function () {
+
 });
 
 gulp.task('watch', function () {
@@ -41,6 +60,6 @@ gulp.task('watch', function () {
     gulp.watch('./app/scripts/**/*.ts', ['ts']);
 });
 
-gulp.task('default', ['connect', 'watch'], function () {
+gulp.task('default', ['connect', 'build', 'watch'], function () {
 
 });

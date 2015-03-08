@@ -2,6 +2,9 @@ doctype html
 html lang="en"
 	head
 		link rel="stylesheet" href="css/main.css"
-        script src="js/main.js"
-	body
+        script src="vendors/angular/angular.js"
+        script src="js/bundle.js"
+	body [ng-app]
 		| hello world
+		input ng-model="a"
+		  | {{a}}
