@@ -9,7 +9,7 @@ var ts = require('gulp-typescript');
 var watch = require('gulp-watch');
 var browserify = require('browserify');
 var source = require('vinyl-source-stream');
-var clean = require('gulp-clean');
+var del = require('del');
 
 // tasks
 gulp.task('connect', function () {
@@ -20,8 +20,9 @@ gulp.task('connect', function () {
 });
 
 gulp.task('clean', function() {
-    gulp.src('./build/*')
-        .pipe(clean({force: true}));
+    del([
+        './build/*'
+    ]);
 });
 
 gulp.task('slim', function () {
