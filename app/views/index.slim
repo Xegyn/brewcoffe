@@ -2,9 +2,14 @@ doctype html
 html lang="en"
 	head
 		link rel="stylesheet" href="css/main.css"
+		link rel="stylesheet" href="vendors/angular-material/angular-material.css"
         script src="vendors/angular/angular.js"
+        script src="vendors/angular-animate/angular-animate.js"
+        script src="vendors/angular-aria/angular-aria.js"
+        script src="vendors/angular-material/angular-material.js"
         script src="js/bundle.js"
-	body [ng-app]
-		| hello world
-		input ng-model="a"
-		  | {{a}}
+	body [ng-app="BrewCoffee"]
+	    md-toolbar layout="row"
+			h1 Hello
+		md-button.md-default-theme button
+	    md-slider ng-model="color.green" min="0" max="255" aria-label="green" id="green-slider" class="md-accent"

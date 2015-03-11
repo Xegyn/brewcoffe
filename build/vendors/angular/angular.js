@@ -1,5 +1,5 @@
 /**
- * @license AngularJS v1.4.0-build.3891+sha.fb7db4a
+ * @license AngularJS v1.4.0-build.3885+sha.f227f7a
  * (c) 2010-2015 Google, Inc. http://angularjs.org
  * License: MIT
  */
@@ -57,7 +57,7 @@ function minErr(module, ErrorConstructor) {
       return match;
     });
 
-    message += '\nhttp://errors.angularjs.org/1.4.0-build.3891+sha.fb7db4a/' +
+    message += '\nhttp://errors.angularjs.org/1.4.0-build.3885+sha.f227f7a/' +
       (module ? module + '/' : '') + code;
 
     for (i = SKIP_INDEXES, paramPrefix = '?'; i < templateArgs.length; i++, paramPrefix = '&') {
@@ -2262,7 +2262,7 @@ function toDebugString(obj) {
  * - `codeName` – `{string}` – Code name of the release, such as "jiggling-armfat".
  */
 var version = {
-  full: '1.4.0-build.3891+sha.fb7db4a',    // all of these placeholder strings will be replaced by grunt's
+  full: '1.4.0-build.3885+sha.f227f7a',    // all of these placeholder strings will be replaced by grunt's
   major: 1,    // package task
   minor: 4,
   dot: 0,
@@ -5956,8 +5956,7 @@ function $TemplateCacheProvider() {
  * Require another directive and inject its controller as the fourth argument to the linking function. The
  * `require` takes a string name (or array of strings) of the directive(s) to pass in. If an array is used, the
  * injected argument will be an array in corresponding order. If no such directive can be
- * found, or if the directive does not have a controller, then an error is raised (unless no link function
- * is specified, in which case error checking is skipped). The name can be prefixed with:
+ * found, or if the directive does not have a controller, then an error is raised. The name can be prefixed with:
  *
  * * (no prefix) - Locate the required controller on the current element. Throw an error if not found.
  * * `?` - Attempt to locate the required controller or pass `null` to the `link` fn if not found.
@@ -10414,7 +10413,6 @@ function $IntervalProvider() {
       *   indefinitely.
       * @param {boolean=} [invokeApply=true] If set to `false` skips model dirty checking, otherwise
       *   will invoke `fn` within the {@link ng.$rootScope.Scope#$apply $apply} block.
-      * @param {...*=} Pass additional parameters to the executed function.
       * @returns {promise} A promise which will be notified on each iteration.
       *
       * @example
@@ -10508,9 +10506,7 @@ function $IntervalProvider() {
       * </example>
       */
     function interval(fn, delay, count, invokeApply) {
-      var hasParams = arguments.length > 4,
-          args = hasParams ? sliceArgs(arguments, 4) : [],
-          setInterval = $window.setInterval,
+      var setInterval = $window.setInterval,
           clearInterval = $window.clearInterval,
           iteration = 0,
           skipApply = (isDefined(invokeApply) && !invokeApply),
@@ -10519,9 +10515,7 @@ function $IntervalProvider() {
 
       count = isDefined(count) ? count : 0;
 
-      promise.then(null, null, (!hasParams) ? fn : function() {
-        fn.apply(null, args);
-      });
+      promise.then(null, null, fn);
 
       promise.$$intervalId = setInterval(function tick() {
         deferred.notify(iteration++);
@@ -14339,26 +14333,8 @@ function $RootScopeProvider() {
     return TTL;
   };
 
-  function createChildScopeClass(parent) {
-    function ChildScope() {
-      this.$$watchers = this.$$nextSibling =
-          this.$$childHead = this.$$childTail = null;
-      this.$$listeners = {};
-      this.$$listenerCount = {};
-      this.$$watchersCount = 0;
-      this.$id = nextUid();
-      this.$$ChildScope = null;
-    }
-    ChildScope.prototype = parent;
-    return ChildScope;
-  }
-
   this.$get = ['$injector', '$exceptionHandler', '$parse', '$browser',
       function($injector, $exceptionHandler, $parse, $browser) {
-
-    function destroyChildScope($event) {
-        $event.currentScope.$$destroyed = true;
-    }
 
     /**
      * @ngdoc type
@@ -14483,7 +14459,16 @@ function $RootScopeProvider() {
           // Only create a child scope class if somebody asks for one,
           // but cache it to allow the VM to optimize lookups.
           if (!this.$$ChildScope) {
-            this.$$ChildScope = createChildScopeClass(this);
+            this.$$ChildScope = function ChildScope() {
+              this.$$watchers = this.$$nextSibling =
+                  this.$$childHead = this.$$childTail = null;
+              this.$$listeners = {};
+              this.$$listenerCount = {};
+              this.$$watchersCount = 0;
+              this.$id = nextUid();
+              this.$$ChildScope = null;
+            };
+            this.$$ChildScope.prototype = this;
           }
           child = new this.$$ChildScope();
         }
@@ -14501,9 +14486,13 @@ function $RootScopeProvider() {
         // prototypically. In all other cases, this property needs to be set
         // when the parent scope is destroyed.
         // The listener needs to be added after the parent is set
-        if (isolate || parent != this) child.$on('$destroy', destroyChildScope);
+        if (isolate || parent != this) child.$on('$destroy', destroyChild);
 
         return child;
+
+        function destroyChild() {
+          child.$$destroyed = true;
+        }
       },
 
       /**
@@ -17017,7 +17006,6 @@ function $TimeoutProvider() {
       * @param {number=} [delay=0] Delay in milliseconds.
       * @param {boolean=} [invokeApply=true] If set to `false` skips model dirty checking, otherwise
       *   will invoke `fn` within the {@link ng.$rootScope.Scope#$apply $apply} block.
-      * @param {...*=} Pass additional parameters to the executed function.
       * @returns {Promise} Promise that will be resolved when the timeout is reached. The value this
       *   promise will be resolved with is the return value of the `fn` function.
       *
@@ -17029,15 +17017,14 @@ function $TimeoutProvider() {
         fn = noop;
       }
 
-      var args = sliceArgs(arguments, 3),
-          skipApply = (isDefined(invokeApply) && !invokeApply),
+      var skipApply = (isDefined(invokeApply) && !invokeApply),
           deferred = (skipApply ? $$q : $q).defer(),
           promise = deferred.promise,
           timeoutId;
 
       timeoutId = $browser.defer(function() {
         try {
-          deferred.resolve(fn.apply(null, args));
+          deferred.resolve(fn());
         } catch (e) {
           deferred.reject(e);
           $exceptionHandler(e);
@@ -18387,43 +18374,6 @@ function limitToFilter() {
  * @param {boolean=} reverse Reverse the order of the array.
  * @returns {Array} Sorted copy of the source array.
  *
- *
- * @example
- * The example below demonstrates a simple ngRepeat, where the data is sorted
- * by age in descending order (predicate is set to `'-age'`).
- * `reverse` is not set, which means it defaults to `false`.
-   <example module="orderByExample">
-     <file name="index.html">
-       <script>
-         angular.module('orderByExample', [])
-           .controller('ExampleController', ['$scope', function($scope) {
-             $scope.friends =
-                 [{name:'John', phone:'555-1212', age:10},
-                  {name:'Mary', phone:'555-9876', age:19},
-                  {name:'Mike', phone:'555-4321', age:21},
-                  {name:'Adam', phone:'555-5678', age:35},
-                  {name:'Julie', phone:'555-8765', age:29}];
-           }]);
-       </script>
-       <div ng-controller="ExampleController">
-         <table class="friend">
-           <tr>
-             <th>Name</th>
-             <th>Phone Number</th>
-             <th>Age</th>
-           </tr>
-           <tr ng-repeat="friend in friends | orderBy:'-age'">
-             <td>{{friend.name}}</td>
-             <td>{{friend.phone}}</td>
-             <td>{{friend.age}}</td>
-           </tr>
-         </table>
-       </div>
-     </file>
-   </example>
- *
- * The predicate and reverse parameters can be controlled dynamically through scope properties,
- * as shown in the next example.
  * @example
    <example module="orderByExample">
      <file name="index.html">
@@ -18806,7 +18756,6 @@ var htmlAnchorDirective = valueFn({
  * but not on older IEs:
  *
  * ```html
- * <!-- See below for an example of ng-disabled being used correctly -->
  * <div ng-init="isDisabled = false">
  *  <button disabled="{{isDisabled}}">Disabled</button>
  * </div>

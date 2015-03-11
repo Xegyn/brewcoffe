@@ -1,11 +1,3 @@
-import two = require('./two');
+/// <reference path="../../typings/angularjs/angular.d.ts" />
 
-class A {
-	public static a: number = 1;
-	public c = new two.B();
-	constructor() {
-		console.log(two.B.b);
-	}
-}
-
-new A();
+var app = angular.module('BrewCoffee', ['ngMaterial']);
