@@ -8,8 +8,14 @@ html lang="en"
         script src="vendors/angular-aria/angular-aria.js"
         script src="vendors/angular-material/angular-material.js"
         script src="js/bundle.js"
-	body [ng-app="BrewCoffee"]
-	    md-toolbar layout="row"
-			h1 Hello
-		md-button.md-default-theme button
-	    md-slider ng-model="color.green" min="0" max="255" aria-label="green" id="green-slider" class="md-accent"
+	body ng-app="BrewCoffee"
+		div ng-controller="MyController"
+		  md-toolbar layout="row"
+		  	md-button ng-click="openMenu()"
+		  		| Menu
+			h1 Brew Coffee
+		  div
+			md-sidenav md-component-id="left"
+			  | Left Nav!
+			  md-button ng-click="openMenu()"
+			   | Close
