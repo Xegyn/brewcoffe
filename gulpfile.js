@@ -49,6 +49,15 @@ gulp.task('ts', function () {
 gulp.task('vendors', function () {
     gulp.src('./app/bower_components/angular/angular*.js')
         .pipe(gulp.dest('build/vendors/angular'));
+    gulp.src([
+        './app/bower_components/angular-material/angular*.js',
+        './app/bower_components/angular-material/angular*.css'
+        ])
+        .pipe(gulp.dest('build/vendors/angular-material'));
+    gulp.src('./app/bower_components/angular-animate/angular*.js')
+        .pipe(gulp.dest('build/vendors/angular-animate'));
+    gulp.src('./app/bower_components/angular-aria/angular*.js')
+        .pipe(gulp.dest('build/vendors/angular-aria'));
 });
 
 gulp.task('build', ['vendors', 'slim', 'sass', 'ts'], function () {
