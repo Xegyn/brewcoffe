@@ -6,5 +6,23 @@ app.controller('MyController', function ($scope, $mdSidenav) {
         $mdSidenav('left').toggle();
     };
 });
+app.directive('timer', function () {
+    return {
+        restrict: 'E',
+        templateUrl: "directives/timer.html"
+    };
+});
 
-},{}]},{},[1]);
+},{}],2:[function(require,module,exports){
+//angular.module('timerdir', [])
+//.controller('ThatController', ['$scope', ($scope) => {
+//
+//    }])
+//app.directive('timer', () => {
+//    return {
+//        restrict: 'E',
+//        template: "<div>aaaaaa</div>"
+//    }
+//}); 
+
+},{}]},{},[1,2]);

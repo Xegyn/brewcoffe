@@ -40,6 +40,7 @@ gulp.task('sass', function () {
 gulp.task('ts', function () {
     return browserify()
         .add('./app/scripts/main.ts')
+        .add('./app/scripts/two.ts')
         .plugin('tsify')
         .bundle()
         .pipe(source('bundle.js'))

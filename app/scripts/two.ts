@@ -1,5 +1,11 @@
 
-
-export class B {
-    public static b: number = 2;
-}
+//angular.module('timerdir', [])
+//.controller('ThatController', ['$scope', ($scope) => {
+//
+//    }])
+//app.directive('timer', () => {
+//    return {
+//        restrict: 'E',
+//        template: "<div>aaaaaa</div>"
+//    }
+//});

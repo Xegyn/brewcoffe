@@ -6,3 +6,11 @@ app.controller('MyController', ($scope, $mdSidenav) => {
         $mdSidenav('left').toggle();
     }
 });
+
+
+app.directive('timer', () => {
+    return {
+        restrict: 'E',
+        templateUrl: "directives/timer.html"
+    }
+});
