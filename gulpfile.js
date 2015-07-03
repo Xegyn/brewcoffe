@@ -7,8 +7,6 @@ var slim = require('gulp-slim');
 var sass = require('gulp-sass');
 var ts = require('gulp-typescript');
 var watch = require('gulp-watch');
-var browserify = require('browserify');
-var source = require('vinyl-source-stream');
 var del = require('del');
 var plumber = require('gulp-plumber');
 
