@@ -1,28 +1,22 @@
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 /// <reference path="../../typings/angularjs/angular.d.ts" />
-var app = angular.module('BrewCoffee', ['ngMaterial']);
-app.controller('MyController', function ($scope, $mdSidenav) {
-    $scope.openMenu = function () {
-        $mdSidenav('left').toggle();
-    };
-});
-app.directive('timer', function () {
-    return {
-        restrict: 'E',
-        templateUrl: "directives/timer.html"
-    };
-});
-
-},{}],2:[function(require,module,exports){
-//angular.module('timerdir', [])
-//.controller('ThatController', ['$scope', ($scope) => {
-//
-//    }])
-//app.directive('timer', () => {
-//    return {
-//        restrict: 'E',
-//        template: "<div>aaaaaa</div>"
-//    }
-//}); 
-
-},{}]},{},[1,2]);
+var brewcoffee;
+(function (brewcoffee) {
+    brewcoffee.app = angular.module('BrewCoffee', ['ngMaterial']);
+    brewcoffee.app.controller('MyController', function ($scope, $mdSidenav) {
+        $scope.openMenu = function () {
+            $mdSidenav('left').toggle();
+        };
+    });
+})(brewcoffee || (brewcoffee = {}));
+var brewcoffee;
+(function (brewcoffee) {
+    brewcoffee.app.directive('timer', function () {
+        return {
+            restrict: 'E',
+            templateUrl: "directives/timer.html",
+            link: function (scope) {
+                scope.something = "my VALUE";
+            }
+        };
+    });
+})(brewcoffee || (brewcoffee = {}));

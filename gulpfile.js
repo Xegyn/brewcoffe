@@ -10,6 +10,7 @@ var watch = require('gulp-watch');
 var browserify = require('browserify');
 var source = require('vinyl-source-stream');
 var del = require('del');
+var plumber = require('gulp-plumber');
 
 // tasks
 gulp.task('connect', function () {
@@ -33,17 +34,22 @@ gulp.task('slim', function () {
 
 gulp.task('sass', function () {
     gulp.src('./app/styles/**/*.scss')
+        .pipe(plumber({
+            handleError: function (err) {
+                console.log(err);
+                this.emit('end');
+            }
+        }))
         .pipe(sass())
         .pipe(gulp.dest('build/css'));
 });
 
 gulp.task('ts', function () {
-    return browserify()
-        .add('./app/scripts/main.ts')
-        .add('./app/scripts/two.ts')
-        .plugin('tsify')
-        .bundle()
-        .pipe(source('bundle.js'))
+    gulp.src('./app/scripts/**/*.ts')
+        .pipe(ts({
+            target: 'ES5',
+            out: 'bundle.js'
+        }))
         .pipe(gulp.dest('build/js/'));
 });
 
