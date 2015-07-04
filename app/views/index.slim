@@ -2,8 +2,8 @@ doctype html
 html lang="en"
   head
     meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
-    link rel="stylesheet" href="css/main.css"
     link rel="stylesheet" href="vendors/angular-material/angular-material.css"
+    link rel="stylesheet" href="css/main.css"
       script src="vendors/angular/angular.js"
       script src="vendors/angular-animate/angular-animate.js"
       script src="vendors/angular-aria/angular-aria.js"
@@ -17,26 +17,23 @@ html lang="en"
             | Menu
           h1 Brew Coffee
       div
-        md-sidenav md-component-id="left" md-swipe-left="openMenu()"
-          md-toolbar
-            .md-toolbar-tools
-              md-button ng-click="openMenu()"
-                | Close
-          md-content.md-padding
-            md-button ng-click="openMenu()"
-              | Blue Bottle
+        sidenav
+      md-content.md-padding.main-content ng-view="" md-swipe-right="openMenu()"
+        div layout="row"
+          div flex-gt-sm="60" offset-gt-sm="20" flex-sm="100"
+            md-card
+              md-card-content
+                h2 Grind
+                p 25-30 grams of beans
+                p Coarsenesss of sea salt
 
-      md-content.md-padding md-swipe-right="openMenu()"
-        h2 Grind
-        p 25-30 grams of beans
-        p Coarsenesss of sea salt
+                h2 Bloom
+                p Twice the grams of beans in water
+                p 30 to 45 seconds
 
-        h2 Bloom
-        p Twice the grams of beans in water
-        p 30 to 45 seconds
+                h2 Pour
+                p 350 grams of water
+                p 2:30-3:00 minutes
 
-        h2 Pour
-        p 350 grams of water
-        p 2:30-3:00 minutes
+                timer
 
-        timer
